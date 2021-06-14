@@ -4,10 +4,9 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Properties;
+import java.util.*;
 
 public class KafkaConsumerDemo {
     public static void main(String[] args) {
@@ -21,7 +20,11 @@ public class KafkaConsumerDemo {
         System.out.println(properties);
 
         KafkaConsumer<String, String> kafka_consumer = new KafkaConsumer<String, String>(properties);
-        kafka_consumer.subscribe(Collections.singletonList("test"));
+        //kafka_consumer.subscribe(Collections.singletonList("test"));
+        Collection<String> topics = new ArrayList<>();
+        topics.add("test");
+        topics.add("test2");
+        kafka_consumer.subscribe(topics);
 
         while (true) {
             ConsumerRecords<String, String> records = kafka_consumer.poll(Duration.ofSeconds(1));
@@ -31,7 +34,8 @@ public class KafkaConsumerDemo {
                         record.offset(),
                         record.value()));
             }
-            System.out.println("try to consume message");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            System.out.println("try to consume message, " + df.format(new Date()));// new Date()为获取当前系统时间
         }
     }
 }
